@@ -44,10 +44,13 @@ export class DashboardComponent implements OnInit {
         this.tasks = tasks;
         //Filter non tasks
         this.tasks = this.tasks.filter((task) => typeof task !== "number");
+
         //enlever toutes les taches dont l'user actuelle n'est pas dans les users de la tache
-        this.tasks = this.tasks.filter((task) =>
-          task.users!.some((user) => user.id === this.user?.id),
+        this.tasks = this.tasks.filter(
+          (task) =>
+            task.users?.some((user) => user.id === this.user?.id) ?? false,
         );
+
         this.extractStatuses();
       },
       error: (error) => {

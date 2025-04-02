@@ -20,3 +20,10 @@ services:
       POSTGRES_PASSWORD: db_password_iscod
     ports:
       - "5432:5432"
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"

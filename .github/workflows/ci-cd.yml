@@ -8,6 +8,20 @@ on:
 jobs:
   build-and-test-backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: db_user_iscod
+          POSTGRES_PASSWORD: db_password_iscod
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Vérification du code
@@ -20,6 +34,10 @@ jobs:
           distribution: "temurin"
 
       - name: Construction et tests du backend
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+          SPRING_DATASOURCE_USERNAME: db_user_iscod
+          SPRING_DATASOURCE_PASSWORD: db_password_iscod
         run: |
           cd back
           mvn clean package

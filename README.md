@@ -33,3 +33,7 @@ Un pipeline CI/CD a été mis en place avec GitHub Actions. À chaque commit, le
 
 ```bash
 docker-compose up --build
+
+### Documentation des endpoints
+
+- [Documentation Swagger](http://localhost:8080/swagger-ui.html)

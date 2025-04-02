@@ -1,4 +1,4 @@
-name: CI Backend
+name: CI Backend and Frontend
 
 on:
   push:
@@ -43,3 +43,26 @@ jobs:
           mvn clean package
           mvn test
           mvn jacoco:report
+
+  build-and-test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Vérification du code
+        uses: actions/checkout@v2
+
+      - name: Installation de Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Installation des dépendances et tests du frontend
+        run: |
+          cd front
+          npm install
+          npm run test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Construction du frontend
+        run: |
+          cd front
+          npm run build -- --prod

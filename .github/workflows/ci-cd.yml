@@ -65,4 +65,4 @@ jobs:
       - name: Construction du frontend
         run: |
           cd front
-          npm run build -- --prod
+          npm run build

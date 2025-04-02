@@ -1,0 +1,195 @@
+<!-- Bouton de retour amélioré avec Bootstrap -->
+<a routerLink="../../" class="btn btn-secondary mb-3">
+    <i class="bi bi-arrow-left"></i> Retour au projet
+</a>
+
+<ng-container *ngIf="task">
+    <!-- Affichage des informations de la tâche avec Bootstrap -->
+    <div class="card">
+        <div class="card-body">
+            <form
+                [formGroup]="taskForm"
+                (ngSubmit)="saveTask()"
+                *ngIf="isUserAdmin || isUserMember"
+            >
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        formControlName="name"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label"
+                        >Description</label
+                    >
+                    <textarea
+                        id="description"
+                        class="form-control"
+                        formControlName="description"
+                    ></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Statut</label>
+                    <select
+                        id="status"
+                        class="form-select"
+                        formControlName="status"
+                    >
+                        <option value="pending">En attente</option>
+                        <option value="in_progress">En cours</option>
+                        <option value="done">Terminé</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Échéance</label>
+                    <input
+                        type="date"
+                        id="dueDate"
+                        class="form-control"
+                        formControlName="dueDate"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="priority" class="form-label">Priorité</label>
+                    <app-star-rating
+                        [priority]="taskForm.get('priority')?.value"
+                        (priorityChange)="
+                            taskForm.get('priority')?.setValue($event)
+                        "
+                        [readonly]="false"
+                    >
+                    </app-star-rating>
+                    <div *ngIf="messages.errors.task.length > 0">
+                        <div class="alert alert-danger" role="alert">
+                            {{ messages.errors.task }}
+                        </div>
+                    </div>
+                    <div *ngIf="messages.success.task.length > 0">
+                        <div class="alert alert-success" role="alert">
+                            {{ messages.success.task }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Sauvegarder
+                    </button>
+                </div>
+            </form>
+            <form [formGroup]="taskForm" *ngIf="isUserWatcher">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nom</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        formControlName="name"
+                        [readonly]="true"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label"
+                        >Description</label
+                    >
+                    <textarea
+                        id="description"
+                        class="form-control"
+                        formControlName="description"
+                        [readonly]="true"
+                    ></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Statut</label>
+                    <select
+                        id="status"
+                        class="form-select"
+                        formControlName="status"
+                        [disabled]="true"
+                    >
+                        <option value="pending">En attente</option>
+                        <option value="in_progress">En cours</option>
+                        <option value="done">Terminé</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Échéance</label>
+                    <input
+                        type="date"
+                        id="dueDate"
+                        class="form-control"
+                        formControlName="dueDate"
+                        [readonly]="true"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="priority" class="form-label">Priorité</label>
+                    <app-star-rating
+                        [priority]="taskForm.get('priority')?.value"
+                        [readonly]="true"
+                    >
+                    </app-star-rating>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Section Utilisateurs avec exploitation de l'interface User -->
+    <div class="mt-4">
+        <h2>Utilisateurs</h2>
+
+        <div *ngIf="messages.errors.user.length > 0">
+            <div class="alert alert-danger" role="alert">
+                {{ messages.errors.user }}
+            </div>
+        </div>
+        <div *ngIf="messages.success.user.length > 0">
+            <div class="alert alert-success" role="alert">
+                {{ messages.success.user }}
+            </div>
+        </div>
+        <form
+            *ngIf="isUserAdmin || isUserMember"
+            [formGroup]="userForm"
+            (ngSubmit)="addUserToTask()"
+            class="input-group mb-3"
+        >
+            <input
+                type="email"
+                class="form-control"
+                placeholder="Adresse email"
+                formControlName="email"
+            />
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="!userForm.valid"
+            >
+                Ajouter
+            </button>
+        </form>
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let user of task.users">
+                <strong>{{ user.username }}</strong> ({{ user.email }})
+                <span class="badge bg-secondary float-right">{{
+                    user.role
+                }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Section Commentaires avec exploitation de l'interface Comment -->
+    <div class="mt-4">
+        <h2>Historique des actions</h2>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let comment of task.comments">
+                <p class="mb-1">{{ comment.content }}</p>
+                <small class="text-muted"
+                    >Créé par {{ comment.createdBy }} le
+                    {{ comment.createdAt | date : "medium" }}</small
+                >
+            </li>
+        </ul>
+    </div>
+</ng-container>

@@ -1,0 +1,31 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-danger" (click)="logout()">Déconnexion</button>
+        <button class="btn btn-secondary" (click)="navigateToProjectList()">
+            Projets
+        </button>
+    </div>
+
+    <div
+        *ngIf="!tasks || tasks.length === 0"
+        class="alert alert-warning"
+        role="alert"
+    >
+        Aucune tâche trouvée.
+    </div>
+    <div class="kanban">
+        <div class="kanban-column" *ngFor="let status of statuses">
+            <h3 class="kanban-column-title">{{ status | translateStatus }}</h3>
+            <div
+                *ngFor="let task of tasks | filterTasks : status"
+                class="kanban-task"
+            >
+                <h5>{{ task.name }}</h5>
+                <p>{{ task.description }}</p>
+                <app-star-rating [priority]="task.priority" [readonly]="true">
+                </app-star-rating>
+                <div>{{ task.dueDate | date : "shortDate" }}</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<form
+    [formGroup]="taskForm"
+    (ngSubmit)="onSubmit()"
+    class="container mt-4 mb-3"
+>
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom</label>
+        <input
+            type="text"
+            class="form-control"
+            id="name"
+            formControlName="name"
+            placeholder="Entrez le nom de la tâche"
+        />
+        <div
+            *ngIf="taskForm.get('name')?.errors?.['required'] && taskForm.get('name')?.touched"
+            class="text-danger"
+        >
+            Le nom est requis.
+        </div>
+        <div
+            *ngIf="taskForm.get('name')?.errors?.['maxlength']"
+            class="text-danger"
+        >
+            Le nom ne peut pas dépasser 50 caractères.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+            class="form-control"
+            id="description"
+            formControlName="description"
+            rows="3"
+        ></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="priority" class="form-label">Priorité</label>
+        <app-star-rating
+            [priority]="priorityValue"
+            (priorityChange)="taskForm.controls.priority.setValue($event)"
+        />
+    </div>
+
+    <div class="mb-3">
+        <label for="dueDate" class="form-label">Date d'échéance</label>
+        <input
+            type="date"
+            class="form-control"
+            id="dueDate"
+            formControlName="dueDate"
+        />
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label">Statut</label>
+        <select class="form-select" id="status" formControlName="status">
+            <option value="pending">À faire</option>
+            <option value="in_progress">En cours</option>
+            <option value="completed">Terminé</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!taskForm.valid">
+        Envoyer
+    </button>
+</form>

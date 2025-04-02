@@ -37,3 +37,35 @@ docker-compose up --build
 ### Documentation des endpoints
 
 - [Documentation Swagger](http://localhost:8080/swagger-ui.html)
+
+### Exemple de docker compose utilisable
+
+```bash
+version: "3.8"
+
+services:
+  app:
+    image: sarkande/project-backend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/projectmanagement
+      SPRING_DATASOURCE_USERNAME: db_user_iscod
+      SPRING_DATASOURCE_PASSWORD: db_password_iscod
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: projectmanagement
+      POSTGRES_USER: db_user_iscod
+      POSTGRES_PASSWORD: db_password_iscod
+    ports:
+      - "5432:5432"
+
+  frontend:
+    image: sarkande/project-frontend:latest
+    ports:
+      - "3000:80"
+```

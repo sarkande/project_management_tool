@@ -22,6 +22,6 @@ jobs:
       - name: Construction et tests du backend
         run: |
           cd back
-          ./mvnw clean package
-          ./mvnw test
-          ./mvnw jacoco:report
+          mvn clean package
+          mvn test
+          mvn jacoco:report
